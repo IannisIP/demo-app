@@ -19,6 +19,7 @@
 <script>
 import ToDos from './components/ToDos.vue';
 import MainFooter from './components/MainFooter.vue';
+import { ref } from '@vue/composition-api';
 
 export default {
   name: 'App',
@@ -26,19 +27,26 @@ export default {
     ToDos,
     MainFooter,
   },
-  data: () => {
+  setup(props, context) {
+    const inputValue = ref('');
+
+    function saveInStore() {
+      if (inputValue.value === '') return;
+
+      context.root.$store.dispatch('saveCurrentTodo', inputValue.value);
+      inputValue.value = '';
+    }
+
+    function removeFromStore() {
+      if (context.root.$store.getters.getToDos.length > 0)
+        context.root.$store.dispatch('removeCurrentTodo');
+    }
+
     return {
-      inputValue: '',
+      saveInStore,
+      removeFromStore,
+      inputValue,
     };
-  },
-  methods: {
-    saveInStore() {
-      this.$store.dispatch('saveCurrentTodo', this.inputValue);
-    },
-    removeFromStore() {
-      if (this.$store.getters.getToDos.length > 0)
-        this.$store.dispatch('removeCurrentTodo');
-    },
   },
 };
 </script>

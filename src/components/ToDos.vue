@@ -10,16 +10,20 @@
 
 <script>
 //import { mapGetters } from 'vuex';
+import { ref, onMounted } from '@vue/composition-api';
+
 export default {
   name: 'ToDos',
-  data: () => {
+  setup(props, context) {
+    const todos = ref([]);
+
+    onMounted(() => {
+      todos.value = context.root.$store.getters['getToDos'];
+    });
+
     return {
-      todos: [],
+      todos,
     };
-  },
-  mounted() {
-    //...mapGetters(['getToDos']);
-    this.todos = this.$store.getters['getToDos'];
   },
 };
 </script>

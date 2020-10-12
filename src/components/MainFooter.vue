@@ -16,29 +16,28 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-
+//import { mapGetters, mapActions } from 'vuex';
+import { ref, computed } from '@vue/composition-api';
 export default {
   name: 'MainFooter',
-  data: function() {
+  setup(props, context) {
+    const cityInputValue = ref('');
+
+    const currentCity = computed(
+      () => context.root.$store.getters['getCurrentCity']
+    );
+
+    function getUpdate() {
+      return context.root.$store.dispatch(
+        'getWeatherInfo',
+        cityInputValue.value
+      );
+    }
     return {
-      cityInputValue: '',
+      getUpdate,
+      cityInputValue,
+      currentCity,
     };
-  },
-  computed: {
-    ...mapGetters(['getCurrentCity']),
-    currentCity() {
-      //return this.$store.getters.getCurrentCity;
-      return this.getCurrentCity;
-    },
-  },
-  methods: {
-    ...mapActions(['getWeatherInfo']),
-    //dispatch getWeatherInfo...
-    getUpdate() {
-      //this.$store.dispatch('getWeatherInfo', this.cityInputValue);
-      this.getWeatherInfo(this.cityInputValue);
-    },
   },
 };
 </script>
